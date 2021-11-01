@@ -17,7 +17,7 @@ void globalCallback(int src, int result) {
 void main() {
   // 初始化互调框架
   var libraryPath =
-      path.join(Directory.current.path, 'ibrary', 'build', 'libsample.so');
+      path.join(Directory.current.path, 'library', 'build', 'libsample.so');
   if (Platform.isMacOS) {
     libraryPath = path.join(
         Directory.current.path, 'library', 'build', 'libsample.dylib');
