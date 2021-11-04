@@ -18,11 +18,73 @@ class NativeLibrary {
           lookup)
       : _lookup = lookup;
 
-  late final ffi.Pointer<ffi.Int32> _int8 = _lookup<ffi.Int32>('int8');
+  late final ffi.Pointer<ffi.Int8> _int8 = _lookup<ffi.Int8>('int8');
 
   int get int8 => _int8.value;
 
   set int8(int value) => _int8.value = value;
+
+  late final ffi.Pointer<ffi.Int16> _int16 = _lookup<ffi.Int16>('int16');
+
+  int get int16 => _int16.value;
+
+  set int16(int value) => _int16.value = value;
+
+  late final ffi.Pointer<ffi.Int32> _int32 = _lookup<ffi.Int32>('int32');
+
+  int get int32 => _int32.value;
+
+  set int32(int value) => _int32.value = value;
+
+  late final ffi.Pointer<ffi.Int64> _int64 = _lookup<ffi.Int64>('int64');
+
+  int get int64 => _int64.value;
+
+  set int64(int value) => _int64.value = value;
+
+  late final ffi.Pointer<ffi.Uint8> _uint8 = _lookup<ffi.Uint8>('uint8');
+
+  int get uint8 => _uint8.value;
+
+  set uint8(int value) => _uint8.value = value;
+
+  late final ffi.Pointer<ffi.Uint16> _uint16 = _lookup<ffi.Uint16>('uint16');
+
+  int get uint16 => _uint16.value;
+
+  set uint16(int value) => _uint16.value = value;
+
+  late final ffi.Pointer<ffi.Uint32> _uint32 = _lookup<ffi.Uint32>('uint32');
+
+  int get uint32 => _uint32.value;
+
+  set uint32(int value) => _uint32.value = value;
+
+  late final ffi.Pointer<ffi.Uint64> _uint64 = _lookup<ffi.Uint64>('uint64');
+
+  int get uint64 => _uint64.value;
+
+  set uint64(int value) => _uint64.value = value;
+
+  late final ffi.Pointer<ffi.Float> _float32 = _lookup<ffi.Float>('float32');
+
+  double get float32 => _float32.value;
+
+  set float32(double value) => _float32.value = value;
+
+  late final ffi.Pointer<ffi.Double> _double64 =
+      _lookup<ffi.Double>('double64');
+
+  double get double64 => _double64.value;
+
+  set double64(double value) => _double64.value = value;
+
+  late final ffi.Pointer<ffi.Pointer<ffi.Int8>> _str1 =
+      _lookup<ffi.Pointer<ffi.Int8>>('str1');
+
+  ffi.Pointer<ffi.Int8> get str1 => _str1.value;
+
+  set str1(ffi.Pointer<ffi.Int8> value) => _str1.value = value;
 
   void hello_world() {
     return _hello_world();
@@ -82,3 +144,259 @@ class NativeLibrary {
           ffi.Pointer<
               ffi.NativeFunction<ffi.Void Function(ffi.Int32, ffi.Int32)>>)>();
 }
+
+class __mbstate_t extends ffi.Union {
+  @ffi.Array.multi([128])
+  external ffi.Array<ffi.Int8> __mbstate8;
+
+  @ffi.Int64()
+  external int _mbstateL;
+}
+
+class __darwin_pthread_handler_rec extends ffi.Struct {
+  external ffi
+          .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      __routine;
+
+  external ffi.Pointer<ffi.Void> __arg;
+
+  external ffi.Pointer<__darwin_pthread_handler_rec> __next;
+}
+
+class _opaque_pthread_attr_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([56])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_cond_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([40])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_condattr_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([8])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_mutex_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([56])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_mutexattr_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([8])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_once_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([8])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_rwlock_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([192])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_rwlockattr_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  @ffi.Array.multi([16])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+class _opaque_pthread_t extends ffi.Struct {
+  @ffi.Int64()
+  external int __sig;
+
+  external ffi.Pointer<__darwin_pthread_handler_rec> __cleanup_stack;
+
+  @ffi.Array.multi([8176])
+  external ffi.Array<ffi.Int8> __opaque;
+}
+
+const int __WORDSIZE = 64;
+
+const int __DARWIN_ONLY_64_BIT_INO_T = 0;
+
+const int __DARWIN_ONLY_UNIX_CONFORMANCE = 1;
+
+const int __DARWIN_ONLY_VERS_1050 = 0;
+
+const int __DARWIN_UNIX03 = 1;
+
+const int __DARWIN_64_BIT_INO_T = 1;
+
+const int __DARWIN_VERS_1050 = 1;
+
+const int __DARWIN_NON_CANCELABLE = 0;
+
+const String __DARWIN_SUF_64_BIT_INO_T = '\$INODE64';
+
+const String __DARWIN_SUF_1050 = '\$1050';
+
+const String __DARWIN_SUF_EXTSN = '\$DARWIN_EXTSN';
+
+const int __DARWIN_C_ANSI = 4096;
+
+const int __DARWIN_C_FULL = 900000;
+
+const int __DARWIN_C_LEVEL = 900000;
+
+const int __STDC_WANT_LIB_EXT1__ = 1;
+
+const int __DARWIN_NO_LONG_LONG = 0;
+
+const int _DARWIN_FEATURE_64_BIT_INODE = 1;
+
+const int _DARWIN_FEATURE_ONLY_UNIX_CONFORMANCE = 1;
+
+const int _DARWIN_FEATURE_UNIX_CONFORMANCE = 3;
+
+const int __DARWIN_NULL = 0;
+
+const int __PTHREAD_SIZE__ = 8176;
+
+const int __PTHREAD_ATTR_SIZE__ = 56;
+
+const int __PTHREAD_MUTEXATTR_SIZE__ = 8;
+
+const int __PTHREAD_MUTEX_SIZE__ = 56;
+
+const int __PTHREAD_CONDATTR_SIZE__ = 8;
+
+const int __PTHREAD_COND_SIZE__ = 40;
+
+const int __PTHREAD_ONCE_SIZE__ = 8;
+
+const int __PTHREAD_RWLOCK_SIZE__ = 192;
+
+const int __PTHREAD_RWLOCKATTR_SIZE__ = 16;
+
+const int USER_ADDR_NULL = 0;
+
+const int INT8_MAX = 127;
+
+const int INT16_MAX = 32767;
+
+const int INT32_MAX = 2147483647;
+
+const int INT64_MAX = 9223372036854775807;
+
+const int INT8_MIN = -128;
+
+const int INT16_MIN = -32768;
+
+const int INT32_MIN = -2147483648;
+
+const int INT64_MIN = -9223372036854775808;
+
+const int UINT8_MAX = 255;
+
+const int UINT16_MAX = 65535;
+
+const int UINT32_MAX = 4294967295;
+
+const int UINT64_MAX = -1;
+
+const int INT_LEAST8_MIN = -128;
+
+const int INT_LEAST16_MIN = -32768;
+
+const int INT_LEAST32_MIN = -2147483648;
+
+const int INT_LEAST64_MIN = -9223372036854775808;
+
+const int INT_LEAST8_MAX = 127;
+
+const int INT_LEAST16_MAX = 32767;
+
+const int INT_LEAST32_MAX = 2147483647;
+
+const int INT_LEAST64_MAX = 9223372036854775807;
+
+const int UINT_LEAST8_MAX = 255;
+
+const int UINT_LEAST16_MAX = 65535;
+
+const int UINT_LEAST32_MAX = 4294967295;
+
+const int UINT_LEAST64_MAX = -1;
+
+const int INT_FAST8_MIN = -128;
+
+const int INT_FAST16_MIN = -32768;
+
+const int INT_FAST32_MIN = -2147483648;
+
+const int INT_FAST64_MIN = -9223372036854775808;
+
+const int INT_FAST8_MAX = 127;
+
+const int INT_FAST16_MAX = 32767;
+
+const int INT_FAST32_MAX = 2147483647;
+
+const int INT_FAST64_MAX = 9223372036854775807;
+
+const int UINT_FAST8_MAX = 255;
+
+const int UINT_FAST16_MAX = 65535;
+
+const int UINT_FAST32_MAX = 4294967295;
+
+const int UINT_FAST64_MAX = -1;
+
+const int INTPTR_MAX = 9223372036854775807;
+
+const int INTPTR_MIN = -9223372036854775808;
+
+const int UINTPTR_MAX = -1;
+
+const int INTMAX_MAX = 9223372036854775807;
+
+const int UINTMAX_MAX = -1;
+
+const int INTMAX_MIN = -9223372036854775808;
+
+const int PTRDIFF_MIN = -9223372036854775808;
+
+const int PTRDIFF_MAX = 9223372036854775807;
+
+const int SIZE_MAX = -1;
+
+const int RSIZE_MAX = 9223372036854775807;
+
+const int WCHAR_MAX = 2147483647;
+
+const int WCHAR_MIN = -2147483648;
+
+const int WINT_MIN = -2147483648;
+
+const int WINT_MAX = 2147483647;
+
+const int SIG_ATOMIC_MIN = -2147483648;
+
+const int SIG_ATOMIC_MAX = 2147483647;

@@ -19,3 +19,5 @@ ffigen:
   headers:
     entry-points:
       - 'library/sample.h'
+  strings:
+    - encoding: ascii

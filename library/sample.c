@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include "sample.h"
 
-int int8 = -108;
 
 int main()
 {
