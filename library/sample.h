@@ -16,12 +16,14 @@ float float32 = 0.12;
 double double64 = 0.64;
 char* str1 = "Dart FFI SAMPLE";
 
-
-// 函数
+/**   dart调C函数   **/
+// 无参无返回
 void hello_world();
-
+// 有返回
+char* getName();
+// 有参数
 void cPrint(char *str);
-
+// 有参数还有返回值
 int multi_sum(float nr_count, ...);
 
 void calc(int src, void (*callback)(int, int));

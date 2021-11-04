@@ -12,7 +12,7 @@ typedef Native_calc = ffi.Void Function(
 typedef FFI_calc = void Function(
     int, ffi.Pointer<ffi.NativeFunction<Callback>>);
 void globalCallback(int src, int result) {
-  print("globalCallback src=$src, result=$result");
+  debugPrint("globalCallback src=$src, result=$result");
 }
 
 void main() {
@@ -21,18 +21,18 @@ void main() {
   final NativeLibrary nativeLibrary = initLibrary();
 
   // *************** 基础数据类型 **************
-  print('\n*************** 1. 基础数据类型 **************\n');
-  print("int8=${nativeLibrary.int8}");
-  print("int16=${nativeLibrary.int16}");
-  print("int32=${nativeLibrary.int32}");
-  print("int64=${nativeLibrary.int64}");
-  print("uint8=${nativeLibrary.uint8}");
-  print("uint16=${nativeLibrary.uint16}");
-  print("uint32=${nativeLibrary.uint32}");
-  print("uint64=${nativeLibrary.uint64}");
-  print("float32=${nativeLibrary.float32}");
-  print("double64=${nativeLibrary.double64}");
-  print("string=${nativeLibrary.str1.cast<Utf8>().toDartString()}");
+  debugPrint('\n*************** 1. 基础数据类型 **************\n');
+  debugPrint("int8=${nativeLibrary.int8}");
+  debugPrint("int16=${nativeLibrary.int16}");
+  debugPrint("int32=${nativeLibrary.int32}");
+  debugPrint("int64=${nativeLibrary.int64}");
+  debugPrint("uint8=${nativeLibrary.uint8}");
+  debugPrint("uint16=${nativeLibrary.uint16}");
+  debugPrint("uint32=${nativeLibrary.uint32}");
+  debugPrint("uint64=${nativeLibrary.uint64}");
+  debugPrint("float32=${nativeLibrary.float32}");
+  debugPrint("double64=${nativeLibrary.double64}");
+  debugPrint("string=${nativeLibrary.str1.cast<Utf8>().toDartString()}");
 
   nativeLibrary.int8++;
   nativeLibrary.int16++;
@@ -44,27 +44,30 @@ void main() {
   nativeLibrary.uint64++;
   nativeLibrary.float32++;
   nativeLibrary.double64++;
-  nativeLibrary.str1 = "修改一下".toNativeUtf8().cast();
-  print("修改后:");
-  print("int8=${nativeLibrary.int8}");
-  print("int16=${nativeLibrary.int16}");
-  print("int32=${nativeLibrary.int32}");
-  print("int64=${nativeLibrary.int64}");
-  print("uint8=${nativeLibrary.uint8}");
-  print("uint16=${nativeLibrary.uint16}");
-  print("uint32=${nativeLibrary.uint32}");
-  print("uint64=${nativeLibrary.uint64}");
-  print("float32=${nativeLibrary.float32}");
-  print("double64=${nativeLibrary.double64}");
-  print("string=${nativeLibrary.str1.cast<Utf8>().toDartString()}");
+  nativeLibrary.str1 = "修改一下".toNativeUtf8().cast<ffi.Int8>();
+  debugPrint("修改后:");
+  debugPrint("int8=${nativeLibrary.int8}");
+  debugPrint("int16=${nativeLibrary.int16}");
+  debugPrint("int32=${nativeLibrary.int32}");
+  debugPrint("int64=${nativeLibrary.int64}");
+  debugPrint("uint8=${nativeLibrary.uint8}");
+  debugPrint("uint16=${nativeLibrary.uint16}");
+  debugPrint("uint32=${nativeLibrary.uint32}");
+  debugPrint("uint64=${nativeLibrary.uint64}");
+  debugPrint("float32=${nativeLibrary.float32}");
+  debugPrint("double64=${nativeLibrary.double64}");
+  debugPrint("string=${nativeLibrary.str1.cast<Utf8>().toDartString()}");
 
   // *************** Dart调用C方法 **************
-  print('\n*************** Dart调用C方法 **************\n');
-  // 调用C方法(无参)
+  debugPrint('\n*************** Dart调用C方法 **************\n');
+  // 无参数无返回值 调用C方法(无参)
   nativeLibrary.hello_world();
-  // 调用C方法(有参)
-  nativeLibrary.cPrint("hhh11".toNativeUtf8().cast<ffi.Int8>());
-  print(nativeLibrary.multi_sum(33));
+  // 有参数
+  nativeLibrary.cPrint("我认为这个输出很有意义".toNativeUtf8().cast<ffi.Int8>());
+  // 有返回值
+  debugPrint("有返回值 -> "+nativeLibrary.getName().cast<Utf8>().toDartString());
+  // 有参有返回值
+  debugPrint("有参有返回值 -> ${nativeLibrary.multi_sum(33)}");
 
   // *************** C调用Dart方法 **************
   // c调用dart
@@ -72,11 +75,11 @@ void main() {
 
   // *************** Dart读取C变量值 **************
 
-  print('读取到int8的值是： ${nativeLibrary.int8}');
+  debugPrint('读取到int8的值是： ${nativeLibrary.int8}');
   nativeLibrary.int8 = 3333;
-  print('读取到int8的值是： ${nativeLibrary.int8}');
+  debugPrint('读取到int8的值是： ${nativeLibrary.int8}');
 
-  print(ffi.sizeOf<ffi.Int64>());
+  debugPrint(ffi.sizeOf<ffi.Int64>());
 
   ffi.Pointer<ffi.Uint8> bytes =
       malloc.allocate<ffi.Uint8>(ffi.sizeOf<ffi.Uint8>());
@@ -100,4 +103,9 @@ NativeLibrary initLibrary() {
   }
   final dylib = ffi.DynamicLibrary.open(libraryPath);
   return NativeLibrary(dylib);
+}
+
+
+void debugPrint(dynamic str){
+  print("[Dart]: ${str.toString()}");
 }

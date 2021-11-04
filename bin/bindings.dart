@@ -7,7 +7,7 @@ class NativeLibrary {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
-
+ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) get lookup => _lookup;
   /// The symbols are looked up in [dynamicLibrary].
   NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
@@ -86,6 +86,7 @@ class NativeLibrary {
 
   set str1(ffi.Pointer<ffi.Int8> value) => _str1.value = value;
 
+  /// dart调C函数
   void hello_world() {
     return _hello_world();
   }
@@ -93,6 +94,15 @@ class NativeLibrary {
   late final _hello_worldPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function()>>('hello_world');
   late final _hello_world = _hello_worldPtr.asFunction<void Function()>();
+
+  ffi.Pointer<ffi.Int8> getName() {
+    return _getName();
+  }
+
+  late final _getNamePtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int8> Function()>>('getName');
+  late final _getName =
+      _getNamePtr.asFunction<ffi.Pointer<ffi.Int8> Function()>();
 
   void cPrint(
     ffi.Pointer<ffi.Int8> str,
