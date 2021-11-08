@@ -33,11 +33,16 @@ int multi_sum(float nr_count, ...) {
     return 2;
 }
 
-// 调用dart函数
-void calc(int src, void (*callback)(int, int)) {
-    int result = src * 10000;
-    callback(src, result);
+void callDart(void (*callback)(), int (*add)(int, int)) {
+    localPrint("现在调用Dart函数");
+    callback();
+
+    localPrint("调用Dart Add函数");
+    int result = add(1, 2);
+    localPrint("Add 结果 %d", result);
 }
+
+// 调用dart函数
 
 void localPrint(const char* str, ...) {
     printf("[CPP]: ");  

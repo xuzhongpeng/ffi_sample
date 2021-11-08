@@ -7,7 +7,7 @@ class NativeLibrary {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
       _lookup;
-ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) get lookup => _lookup;
+
   /// The symbols are looked up in [dynamicLibrary].
   NativeLibrary(ffi.DynamicLibrary dynamicLibrary)
       : _lookup = dynamicLibrary.lookup;
@@ -130,29 +130,30 @@ ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) get lookup 
       _lookup<ffi.NativeFunction<ffi.Int32 Function(ffi.Float)>>('multi_sum');
   late final _multi_sum = _multi_sumPtr.asFunction<int Function(double)>();
 
-  void calc(
-    int src,
-    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Int32, ffi.Int32)>>
-        callback,
+  /// C调用Dart函数
+  void callDart(
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>> callback,
+    ffi.Pointer<ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>
+        add,
   ) {
-    return _calc(
-      src,
+    return _callDart(
       callback,
+      add,
     );
   }
 
-  late final _calcPtr = _lookup<
+  late final _callDartPtr = _lookup<
       ffi.NativeFunction<
           ffi.Void Function(
-              ffi.Int32,
+              ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>,
               ffi.Pointer<
                   ffi.NativeFunction<
-                      ffi.Void Function(ffi.Int32, ffi.Int32)>>)>>('calc');
-  late final _calc = _calcPtr.asFunction<
+                      ffi.Int32 Function(ffi.Int32, ffi.Int32)>>)>>('callDart');
+  late final _callDart = _callDartPtr.asFunction<
       void Function(
-          int,
+          ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>,
           ffi.Pointer<
-              ffi.NativeFunction<ffi.Void Function(ffi.Int32, ffi.Int32)>>)>();
+              ffi.NativeFunction<ffi.Int32 Function(ffi.Int32, ffi.Int32)>>)>();
 }
 
 class __mbstate_t extends ffi.Union {

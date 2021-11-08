@@ -26,4 +26,5 @@ void cPrint(char *str);
 // 有参数还有返回值
 int multi_sum(float nr_count, ...);
 
-void calc(int src, void (*callback)(int, int));
+/**  C调用Dart函数  **/
+void callDart(void (*callback)(), int (*add)(int, int));

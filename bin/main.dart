@@ -6,13 +6,21 @@ import 'package:path/path.dart' as path;
 import 'bindings.dart';
 
 // c调用dart方法
-typedef Callback = ffi.Void Function(ffi.Int32, ffi.Int32);
-typedef Native_calc = ffi.Void Function(
-    ffi.Int32, ffi.Pointer<ffi.NativeFunction<Callback>>);
-typedef FFI_calc = void Function(
-    int, ffi.Pointer<ffi.NativeFunction<Callback>>);
-void globalCallback(int src, int result) {
-  debugPrint("globalCallback src=$src, result=$result");
+// typedef Callback = ffi.Void Function(ffi.Int32, ffi.Int32);
+// typedef Native_calc = ffi.Void Function(
+//     ffi.Int32, ffi.Pointer<ffi.NativeFunction<Callback>>);
+// typedef FFI_calc = void Function(
+//     int, ffi.Pointer<ffi.NativeFunction<Callback>>);
+
+class DartFunctions {
+  static void dartFunction() {
+    debugPrint("Dart 方法被调用了");
+  }
+
+  static int add(int num1, int num2) {
+    debugPrint("num1: ${num1}, num2: ${num2}");
+    return num1 + num2;
+  }
 }
 
 void main() {
@@ -58,26 +66,24 @@ void main() {
   debugPrint("double64=${nativeLibrary.double64}");
   debugPrint("string=${nativeLibrary.str1.cast<Utf8>().toDartString()}");
 
-  // *************** Dart调用C方法 **************
+  // *************** Dart调用C函数 **************
   debugPrint('\n*************** Dart调用C方法 **************\n');
   // 无参数无返回值 调用C方法(无参)
   nativeLibrary.hello_world();
   // 有参数
   nativeLibrary.cPrint("我认为这个输出很有意义".toNativeUtf8().cast<ffi.Int8>());
   // 有返回值
-  debugPrint("有返回值 -> "+nativeLibrary.getName().cast<Utf8>().toDartString());
+  debugPrint("有返回值 -> " + nativeLibrary.getName().cast<Utf8>().toDartString());
   // 有参有返回值
   debugPrint("有参有返回值 -> ${nativeLibrary.multi_sum(33)}");
 
-  // *************** C调用Dart方法 **************
+  // *************** C调用Dart函数 **************
   // c调用dart
-  nativeLibrary.calc(32, ffi.Pointer.fromFunction(globalCallback));
+
+  nativeLibrary.callDart(ffi.Pointer.fromFunction(DartFunctions.dartFunction),ffi.Pointer.fromFunction(DartFunctions.add, 0));
+
 
   // *************** Dart读取C变量值 **************
-
-  debugPrint('读取到int8的值是： ${nativeLibrary.int8}');
-  nativeLibrary.int8 = 3333;
-  debugPrint('读取到int8的值是： ${nativeLibrary.int8}');
 
   debugPrint(ffi.sizeOf<ffi.Int64>());
 
@@ -105,7 +111,6 @@ NativeLibrary initLibrary() {
   return NativeLibrary(dylib);
 }
 
-
-void debugPrint(dynamic str){
+void debugPrint(dynamic str) {
   print("[Dart]: ${str.toString()}");
 }
