@@ -14,13 +14,13 @@ uint32_t uint32 = 32;
 uint64_t uint64 = 64;
 float float32 = 0.12;
 double double64 = 0.64;
-char* str1 = "Dart FFI SAMPLE";
+char *str1 = "Dart FFI SAMPLE";
 
 /**   dart调C函数   **/
 // 无参无返回
 void hello_world();
 // 有返回
-char* getName();
+char *getName();
 // 有参数
 void cPrint(char *str);
 // 有参数还有返回值
@@ -28,3 +28,20 @@ int multi_sum(float nr_count, ...);
 
 /**  C调用Dart函数  **/
 void callDart(void (*callback)(), int (*add)(int, int));
+
+/** 结构体 **/
+typedef struct
+{
+  char *name;
+  int age;
+  float score;
+} Student;
+// C创建一个Student
+Student initStudent(char *name, int age, float score);
+/** 共同体 **/
+union ContactType
+{
+  char *phone;
+  char *email;
+};
+union ContactType createContactType();

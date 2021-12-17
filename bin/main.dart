@@ -92,7 +92,26 @@ void main() {
 
   malloc.free(bytes);
 
-  // *************** C读取Dart变量值 **************
+  // ********** 结构体 *************
+  // dart 初始化一个student 调用C函数初始化
+  var name = "幺风JSShou".toNativeUtf8();
+  var student = nativeLibrary.initStudent(name.cast<ffi.Int8>(), 25, 100);
+  debugPrint(
+      "姓名：${student.name.cast<Utf8>().toDartString()} ,年龄：${student.age} , 分数：${student.score}");
+  malloc.free(name);
+  /************共用体 *******/
+  var contactType = nativeLibrary.createContactType();
+  var phone = "13032003004".toNativeUtf8();
+  contactType.phone = phone.cast();
+  debugPrint(
+      "电话：${contactType.email.cast<Utf8>().toDartString()}, email: ${contactType.phone.cast<Utf8>().toDartString()}");
+  var email = "13032003004@gmail.com".toNativeUtf8();
+  contactType.email = email.cast();
+  debugPrint(
+      "电话：${contactType.email.cast<Utf8>().toDartString()}, email: ${contactType.phone.cast<Utf8>().toDartString()}");
+  malloc.free(phone);
+  malloc.free(email);
+  // ********** 类 **********/
 }
 
 /// 初始化library

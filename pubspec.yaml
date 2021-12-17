@@ -19,5 +19,8 @@ ffigen:
   headers:
     entry-points:
       - 'library/sample.h'
+    # 保证只转换sample.h文件 不转换其包含的stdint.h文件
+    include-directives: 
+      - 'library/sample.h'
   # strings:
   #   - encoding: ascii

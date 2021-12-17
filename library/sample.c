@@ -3,11 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 #include <stdio.h>
-#include <stdarg.h>  
+#include <stdarg.h>
 #include <stdlib.h>
 #include "sample.h"
 
-void localPrint(const char* str, ...);
+void localPrint(const char *str, ...);
 int main()
 {
     hello_world();
@@ -17,23 +17,25 @@ void hello_world()
 {
     localPrint("Hello World");
 }
-char* getName()
+char *getName()
 {
     return "My name is 大哥大";
 }
 
 // 传入string类型
-void cPrint(char *str) 
+void cPrint(char *str)
 {
     localPrint("%s", str);
     free(str);
 }
-int multi_sum(float nr_count, ...) {
+int multi_sum(float nr_count, ...)
+{
     localPrint("%f", nr_count);
     return 2;
 }
-
-void callDart(void (*callback)(), int (*add)(int, int)) {
+// 调用dart函数
+void callDart(void (*callback)(), int (*add)(int, int))
+{
     localPrint("现在调用Dart函数");
     callback();
 
@@ -42,13 +44,23 @@ void callDart(void (*callback)(), int (*add)(int, int)) {
     localPrint("Add 结果 %d", result);
 }
 
-// 调用dart函数
+Student initStudent(char *name, int age, float score)
+{
+    Student st = {name, age, score};
+    return st;
+}
 
-void localPrint(const char* str, ...) {
-    printf("[CPP]: ");  
-    va_list args;       //定义一个va_list类型的变量，用来储存单个参数  
-    va_start(args,str); //使args指向可变参数的第一个参数  
-    vprintf(str,args);  //必须用vprintf等带V的  
-    va_end(args);       //结束可变参数的获取
-    printf("\n");  
+void localPrint(const char *str, ...)
+{
+    printf("[CPP]: ");
+    va_list args;        //定义一个va_list类型的变量，用来储存单个参数
+    va_start(args, str); //使args指向可变参数的第一个参数
+    vprintf(str, args);  //必须用vprintf等带V的
+    va_end(args);        //结束可变参数的获取
+    printf("\n");
+}
+union ContactType createContactType()
+{
+    union ContactType contactInfo;
+    return contactInfo;
 }
