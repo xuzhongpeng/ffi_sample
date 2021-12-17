@@ -80,8 +80,8 @@ void main() {
   // *************** C调用Dart函数 **************
   // c调用dart
 
-  nativeLibrary.callDart(ffi.Pointer.fromFunction(DartFunctions.dartFunction),ffi.Pointer.fromFunction(DartFunctions.add, 0));
-
+  nativeLibrary.callDart(ffi.Pointer.fromFunction(DartFunctions.dartFunction),
+      ffi.Pointer.fromFunction(DartFunctions.add, 0));
 
   // *************** Dart读取C变量值 **************
 
