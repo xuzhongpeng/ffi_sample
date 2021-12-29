@@ -5,7 +5,7 @@ description: 使用ffi及ffigen的例子
 publish_to: none
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
   path: ^1.7.0
@@ -16,11 +16,16 @@ dev_dependencies:
 
 ffigen:
   output: 'bin/bindings.dart'
+  name: 'NativeLibrary'
+  description: 'demo'
   headers:
     entry-points:
       - 'library/sample.h'
     # 保证只转换sample.h文件 不转换其包含的stdint.h文件
     include-directives: 
       - 'library/sample.h'
+  structs:
+    rename:
+      'Monster': 'Monster1'
   # strings:
   #   - encoding: ascii

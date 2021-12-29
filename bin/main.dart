@@ -111,9 +111,40 @@ void main() {
       "电话：${contactType.email.cast<Utf8>().toDartString()}, email: ${contactType.phone.cast<Utf8>().toDartString()}");
   malloc.free(phone);
   malloc.free(email);
+
   // ********** 类 **********/
+  SportMan man = nativeLibrary.createSportMan();
+  nativeLibrary.setManName(man, "SY".toNativeUtf8().cast());
+  debugPrint(
+      "运动员名称：" + nativeLibrary.getManName(man).cast<Utf8>().toDartString());
+
+  SportManType m = SportManType(nativeLibrary);
+  m.setName('SY is a dog');
+  debugPrint(m.getName());
 }
 
+/*** 以下是类封装 */
+class SportManType {
+  //extends ffi.Opaque
+  String? _name;
+  late NativeLibrary _lib;
+  late SportMan man;
+
+  SportManType(NativeLibrary library) {
+    _lib = library;
+    man = _lib.createSportMan();
+  }
+
+  String getName() {
+    return _lib.getManName(man).cast<Utf8>().toDartString();
+  }
+
+  void setName(String name) {
+    _lib.setManName(man, name.toNativeUtf8().cast());
+  }
+}
+
+/*** 以下是工具方法 */
 /// 初始化library
 NativeLibrary initLibrary() {
   var libraryPath =
