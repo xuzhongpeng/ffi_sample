@@ -4,22 +4,22 @@
 #include <stdint.h>
 // 因为本测试设计到了C++的类(用的C++编译的)，所以需要把函数都通过extern "C"导出让ffi识别
 #ifdef __cplusplus
-  #define EXPORT extern "C"
+  #define EXPORT extern "C" __declspec(dllexport)
 #else
   #define EXPORT // ffigen生成时，会使用C编译器，所以改成空即可
 #endif
 // 基础数据类型
-int8_t int8 = -108;
-int16_t int16 = -16;
-int32_t int32 = -32;
-int64_t int64 = -64;
-uint8_t uint8 = 208;
-uint16_t uint16 = 16;
-uint32_t uint32 = 32;
-uint64_t uint64 = 64;
-float float32 = 0.12;
-double double64 = 0.64;
-const char *str1 = "Dart FFI SAMPLE";
+EXPORT int8_t int8 = -108;
+EXPORT int16_t int16 = -16;
+EXPORT int32_t int32 = -32;
+EXPORT int64_t int64 = -64;
+EXPORT uint8_t uint8 = 208;
+EXPORT uint16_t uint16 = 16;
+EXPORT uint32_t uint32 = 32;
+EXPORT uint64_t uint64 = 64;
+EXPORT float float32 = 0.12;
+EXPORT double double64 = 0.64;
+EXPORT const char *str1 = "Dart FFI SAMPLE";
 
 /**   dart调C函数   **/
 // 无参无返回

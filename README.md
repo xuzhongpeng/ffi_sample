@@ -55,3 +55,11 @@ chmod 777 ./build.sh
 build.sh -a
 ```
 当带有『-a』参数时，会编译cpp代码并生成bindings.dart文件，不带参数时相当于直接运行『dart bin/main.dart』.
+
+
+
+windows编译
+gcc -c .\sample.cc -o sample.o
+gcc .\sample.o -o main.exe -lstdc++
+编译dll
+gcc -shared -o .\Debug\libsample.dll sample.cc -lstdc++

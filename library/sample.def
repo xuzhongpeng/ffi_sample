@@ -1,3 +1,3 @@
-LIBRARY   sample
+LIBRARY sample
 EXPORTS
-   sample
+   hello_world
