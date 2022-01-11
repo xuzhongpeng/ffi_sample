@@ -6,6 +6,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include "sample.h"
+#include <pthread.h>
 
 void localPrint(const char *str, ...);
 // 输出日志信息函数
@@ -18,14 +19,20 @@ void localPrint(const char *str, ...)
     va_end(args);        //结束可变参数的获取
     printf("\n");
 }
+void back(const char *str)
+{
+    localPrint(str);
+}
 int main()
 {
     hello_world();
     // 测试类的输入输出
     SportMan man = createSportMan();
-    setManName(man,"让我起飞");
+    setManName(man, "让我起飞");
     localPrint(getManName(man));
-    
+
+    getFuture(back);
+
     return 0;
 }
 
@@ -78,12 +85,46 @@ SportMan createSportMan()
 {
     return new SportManType();
 }
-void setManName(SportMan self,const char *name)
+void setManName(SportMan self, const char *name)
 {
-    SportManType* p = reinterpret_cast<SportManType*>(self);
+    SportManType *p = reinterpret_cast<SportManType *>(self);
     p->setName(name);
 }
-const char* getManName(SportMan self) {
-    SportManType* p = reinterpret_cast<SportManType*>(self);
+const char *getManName(SportMan self)
+{
+    SportManType *p = reinterpret_cast<SportManType *>(self);
     return p->getName();
+}
+
+struct thread_data
+{
+    FUNC *callback;
+};
+void* say_hello(void *args)
+{
+    void (*callback1)(const char *) = (void (*)(const char *)) args;
+    localPrint("Hello Runoob！");
+    callback1("哈哈哈1");
+    // pthread_exit(NULL);
+    return 0;
+}
+// 异步测试
+void getFuture(void (*callback1)(const char *))
+{
+
+    pthread_t tids;
+    // callback1("嘻嘻");
+    int ret = pthread_create(&tids, NULL, say_hello, (void *)callback1);
+    if (ret != 0)
+    {
+        localPrint("pthread_create error: error_code=%d", ret);
+    }
+    localPrint("输出结束");
+    pthread_exit(NULL);
+}
+
+// Initialize `dart_api_dl.h`
+DART_EXPORT intptr_t InitDartApiDL(void *data) {
+    localPrint("InitDartApiDL");
+    return Dart_InitializeApiDL(data);
 }

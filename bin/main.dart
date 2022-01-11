@@ -21,6 +21,10 @@ class DartFunctions {
     debugPrint("num1: ${num1}, num2: ${num2}");
     return num1 + num2;
   }
+
+  static void futureCall(ffi.Pointer<ffi.Int8> value) {
+    print("异步返回了" + value.cast<Utf8>().toDartString());
+  }
 }
 
 void main() {
@@ -121,6 +125,9 @@ void main() {
   SportManType m = SportManType(nativeLibrary);
   m.setName('SY is a dog');
   debugPrint(m.getName());
+
+  // ********** 异步 **********/
+  nativeLibrary.getFuture(ffi.Pointer.fromFunction(DartFunctions.futureCall));
 }
 
 /*** 以下是类封装 */
@@ -143,6 +150,12 @@ class SportManType {
     _lib.setManName(man, name.toNativeUtf8().cast());
   }
 }
+
+/**** 类封装 end ***/
+/*** 以下是异步封装 */
+// C++调用成功后回调
+
+/*** 异步封装end */
 
 /*** 以下是工具方法 */
 /// 初始化library

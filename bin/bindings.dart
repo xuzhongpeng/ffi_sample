@@ -222,6 +222,27 @@ class NativeLibrary {
           'getManName');
   late final _getManName =
       _getManNamePtr.asFunction<ffi.Pointer<ffi.Int8> Function(SportMan)>();
+
+  void getFuture(
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Int8>)>>
+        callback,
+  ) {
+    return _getFuture(
+      callback,
+    );
+  }
+
+  late final _getFuturePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<
+                  ffi.NativeFunction<
+                      ffi.Void Function(
+                          ffi.Pointer<ffi.Int8>)>>)>>('getFuture');
+  late final _getFuture = _getFuturePtr.asFunction<
+      void Function(
+          ffi.Pointer<
+              ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Int8>)>>)>();
 }
 
 /// 结构体

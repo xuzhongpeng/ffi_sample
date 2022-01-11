@@ -2,9 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 #include <stdint.h>
+#include "dart_api_dl.h"
 // 因为本测试设计到了C++的类(用的C++编译的)，所以需要把函数都通过extern "C"导出让ffi识别
 #ifdef __cplusplus
-  #define EXPORT extern "C" __declspec(dllexport)
+  #define EXPORT extern "C" 
+  //__declspec(dllexport)
 #else
   #define EXPORT // ffigen生成时，会使用C编译器，所以改成空即可
 #endif
@@ -72,3 +74,13 @@ EXPORT typedef void* SportMan;
 EXPORT SportMan createSportMan(); // 初始化SportManType类
 EXPORT void setManName(SportMan self,const char *name); // 设置姓名
 EXPORT const char *getManName(SportMan self); // 获取姓名
+
+
+/**  C调用Dart函数(错误） **/
+typedef void(FUNC)(const char *);
+EXPORT void getFuture(void (*callback)(const char *));
+
+/**  C调用Dart函数 **/
+// Initialize `dart_api_dl.h`
+DART_EXPORT intptr_t InitDartApiDL(void *data);
+
