@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:ffi' as ffi;
+import 'dart:ffi';
+import 'dart:isolate';
 import 'package:ffi/ffi.dart';
 import 'dart:io' show Platform, Directory;
 
@@ -27,10 +30,23 @@ class DartFunctions {
   }
 }
 
+void asyncCallback() {
+  print('asyncCallback called');
+}
+
+void _handleNativeMessage(dynamic message) {
+  print('_handleNativeMessage $message');
+  final int address = message;
+  nativeLibrary.ExecuteCallback(Pointer<Void>.fromAddress(address).cast());
+  _receivePort.close();
+}
+
+ReceivePort _receivePort = ReceivePort();
+
+typedef NativeAsyncCallbackFunc = Void Function();
+final NativeLibrary nativeLibrary = initLibrary();
 void main() {
   // 初始化互调框架
-
-  final NativeLibrary nativeLibrary = initLibrary();
 
   // *************** 基础数据类型 **************
   debugPrint('\n*************** 1. 基础数据类型 **************\n');
@@ -127,7 +143,21 @@ void main() {
   debugPrint(m.getName());
 
   // ********** 异步 **********/
-  nativeLibrary.getFuture(ffi.Pointer.fromFunction(DartFunctions.futureCall));
+  // nativeLibrary.getFuture(ffi.Pointer.fromFunction(DartFunctions.futureCall));
+  // WidgetsFlutterBinding.ensureInitialized();
+  StreamSubscription? _subscription;
+  void ensureNativeInitialized() {
+    var nativeInited =
+        nativeLibrary.InitDartApiDL(NativeApi.initializeApiDLData);
+    assert(nativeInited == 0, 'DART_API_DL_MAJOR_VERSION != 2');
+    _subscription = _receivePort.listen(_handleNativeMessage);
+    nativeLibrary.RegisterSendPort(_receivePort.sendPort.nativePort);
+  }
+
+  ensureNativeInitialized();
+  var asyncFunc = Pointer.fromFunction<NativeAsyncCallbackFunc>(asyncCallback);
+  nativeLibrary.NativeAsyncCallback(asyncFunc);
+  nativeLibrary.NativeAsyncCallback(asyncFunc);
 }
 
 /*** 以下是类封装 */

@@ -3,11 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 #include <stdio.h>
+#include <functional>
 #include <stdarg.h>
 #include <stdlib.h>
 #include "sample.h"
 #include <pthread.h>
-
+#include <unistd.h>
+// #include <dart_api_dl.h>
 void localPrint(const char *str, ...);
 // 输出日志信息函数
 void localPrint(const char *str, ...)
@@ -22,18 +24,6 @@ void localPrint(const char *str, ...)
 void back(const char *str)
 {
     localPrint(str);
-}
-int main()
-{
-    hello_world();
-    // 测试类的输入输出
-    SportMan man = createSportMan();
-    setManName(man, "让我起飞");
-    localPrint(getManName(man));
-
-    getFuture(back);
-
-    return 0;
 }
 
 /*** 开始测试 ***/
@@ -100,11 +90,11 @@ struct thread_data
 {
     FUNC *callback;
 };
-void* say_hello(void *args)
+void *say_hello(void *args)
 {
-    void (*callback1)(const char *) = (void (*)(const char *)) args;
+    void (*callback1)(const char *) = (void (*)(const char *))args;
     localPrint("Hello Runoob！");
-    callback1("哈哈哈1");
+    // callback1("哈哈哈1");
     // pthread_exit(NULL);
     return 0;
 }
@@ -124,7 +114,44 @@ void getFuture(void (*callback1)(const char *))
 }
 
 // Initialize `dart_api_dl.h`
-DART_EXPORT intptr_t InitDartApiDL(void *data) {
+DART_EXPORT intptr_t InitDartApiDL(void *data)
+{
     localPrint("InitDartApiDL");
     return Dart_InitializeApiDL(data);
+}
+Dart_Port send_port_;
+DART_EXPORT void RegisterSendPort(Dart_Port send_port)
+{
+    localPrint("入参 is %d", &send_port_);
+    send_port_ = send_port;
+}
+typedef std::function<void()> Work;
+void *thread_func(void *args)
+{
+    printf("thread_func Running on (%p)\n", pthread_self());
+    sleep(1 /* seconds */); // doing something
+    Dart_CObject dart_object;
+    dart_object.type = Dart_CObject_kInt64;
+    localPrint("value is %d", &send_port_);
+    dart_object.value.as_int64 = reinterpret_cast<intptr_t>(args);
+    Dart_PostCObject_DL(send_port_, &dart_object);
+    // pthread_exit(args);
+    return 0;
+}
+DART_EXPORT void NativeAsyncCallback(VoidCallbackFunc callback)
+{
+    printf("NativeAsyncCallback Running on (%p)\n", pthread_self());
+
+    pthread_t callback_thread;
+    int ret = pthread_create(&callback_thread, NULL, thread_func, (void *)callback);
+    if (ret != 0)
+    {
+        localPrint("pthread_create error: error_code=%d", ret);
+    }
+    localPrint("输出结束");
+    // pthread_detach(callback_thread);
+}
+DART_EXPORT void ExecuteCallback(VoidCallbackFunc callback) {
+    printf("ExecuteCallback Running on (%p)\n", pthread_self());
+    callback();
 }

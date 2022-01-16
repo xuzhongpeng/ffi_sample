@@ -243,6 +243,62 @@ class NativeLibrary {
       void Function(
           ffi.Pointer<
               ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Int8>)>>)>();
+
+  int InitDartApiDL(
+    ffi.Pointer<ffi.Void> data,
+  ) {
+    return _InitDartApiDL(
+      data,
+    );
+  }
+
+  late final _InitDartApiDLPtr =
+      _lookup<ffi.NativeFunction<ffi.IntPtr Function(ffi.Pointer<ffi.Void>)>>(
+          'InitDartApiDL');
+  late final _InitDartApiDL =
+      _InitDartApiDLPtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
+
+  void RegisterSendPort(
+    int send_port,
+  ) {
+    return _RegisterSendPort(
+      send_port,
+    );
+  }
+
+  late final _RegisterSendPortPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(Dart_Port)>>(
+          'RegisterSendPort');
+  late final _RegisterSendPort =
+      _RegisterSendPortPtr.asFunction<void Function(int)>();
+
+  void NativeAsyncCallback(
+    VoidCallbackFunc callback,
+  ) {
+    return _NativeAsyncCallback(
+      callback,
+    );
+  }
+
+  late final _NativeAsyncCallbackPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(VoidCallbackFunc)>>(
+          'NativeAsyncCallback');
+  late final _NativeAsyncCallback =
+      _NativeAsyncCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
+
+  void ExecuteCallback(
+    VoidCallbackFunc callback,
+  ) {
+    return _ExecuteCallback(
+      callback,
+    );
+  }
+
+  late final _ExecuteCallbackPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(VoidCallbackFunc)>>(
+          'ExecuteCallback');
+  late final _ExecuteCallback =
+      _ExecuteCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
 }
 
 /// 结构体
@@ -264,3 +320,9 @@ class ContactType extends ffi.Union {
 }
 
 typedef SportMan = ffi.Pointer<ffi.Void>;
+
+/// A port is used to send or receive inter-isolate messages
+typedef Dart_Port = ffi.Int64;
+
+/// C调用Dart异步函数
+typedef VoidCallbackFunc = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;
