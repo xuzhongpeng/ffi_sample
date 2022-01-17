@@ -85,8 +85,11 @@ EXPORT void getFuture(void (*callback)(const char *));
 
 /**  C调用Dart异步函数 **/
 typedef void (*VoidCallbackFunc)();
+/** 初始化dart_api_dl相关数据 */
 DART_EXPORT intptr_t InitDartApiDL(void *data);
-DART_EXPORT void RegisterSendPort(Dart_Port send_port);
-
-DART_EXPORT void NativeAsyncCallback(VoidCallbackFunc callback);
-DART_EXPORT void ExecuteCallback(VoidCallbackFunc callback);
+/** 将dart send port传递到C/C++内存缓存起来 */
+DART_EXPORT void registerSendPort(Dart_Port send_port);
+/** 执行一个异步无返回值的异步函数 **/
+DART_EXPORT void nativeAsyncCallback(VoidCallbackFunc callback);
+/** 执行dart传递回来的地址函数 */
+DART_EXPORT void executeCallback(VoidCallbackFunc callback);

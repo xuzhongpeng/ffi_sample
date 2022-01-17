@@ -244,6 +244,7 @@ class NativeLibrary {
           ffi.Pointer<
               ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Int8>)>>)>();
 
+  /// 初始化dart_api_dl相关数据
   int InitDartApiDL(
     ffi.Pointer<ffi.Void> data,
   ) {
@@ -258,47 +259,50 @@ class NativeLibrary {
   late final _InitDartApiDL =
       _InitDartApiDLPtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
 
-  void RegisterSendPort(
+  /// 将dart send port传递到C/C++内存缓存起来
+  void registerSendPort(
     int send_port,
   ) {
-    return _RegisterSendPort(
+    return _registerSendPort(
       send_port,
     );
   }
 
-  late final _RegisterSendPortPtr =
+  late final _registerSendPortPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(Dart_Port)>>(
-          'RegisterSendPort');
-  late final _RegisterSendPort =
-      _RegisterSendPortPtr.asFunction<void Function(int)>();
+          'registerSendPort');
+  late final _registerSendPort =
+      _registerSendPortPtr.asFunction<void Function(int)>();
 
-  void NativeAsyncCallback(
+  /// 执行一个异步无返回值的异步函数
+  void nativeAsyncCallback(
     VoidCallbackFunc callback,
   ) {
-    return _NativeAsyncCallback(
+    return _nativeAsyncCallback(
       callback,
     );
   }
 
-  late final _NativeAsyncCallbackPtr =
+  late final _nativeAsyncCallbackPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(VoidCallbackFunc)>>(
-          'NativeAsyncCallback');
-  late final _NativeAsyncCallback =
-      _NativeAsyncCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
+          'nativeAsyncCallback');
+  late final _nativeAsyncCallback =
+      _nativeAsyncCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
 
-  void ExecuteCallback(
+  /// 执行dart传递回来的地址函数
+  void executeCallback(
     VoidCallbackFunc callback,
   ) {
-    return _ExecuteCallback(
+    return _executeCallback(
       callback,
     );
   }
 
-  late final _ExecuteCallbackPtr =
+  late final _executeCallbackPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(VoidCallbackFunc)>>(
-          'ExecuteCallback');
-  late final _ExecuteCallback =
-      _ExecuteCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
+          'executeCallback');
+  late final _executeCallback =
+      _executeCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
 }
 
 /// 结构体

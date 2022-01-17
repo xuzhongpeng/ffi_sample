@@ -116,42 +116,37 @@ void getFuture(void (*callback1)(const char *))
 // Initialize `dart_api_dl.h`
 DART_EXPORT intptr_t InitDartApiDL(void *data)
 {
-    localPrint("InitDartApiDL");
+    localPrint("初始化InitDartApiDL");
     return Dart_InitializeApiDL(data);
 }
 Dart_Port send_port_;
-DART_EXPORT void RegisterSendPort(Dart_Port send_port)
+DART_EXPORT void registerSendPort(Dart_Port send_port)
 {
-    localPrint("入参 is %d", &send_port_);
+    localPrint("设置send port");
     send_port_ = send_port;
 }
-typedef std::function<void()> Work;
 void *thread_func(void *args)
 {
-    printf("thread_func Running on (%p)\n", pthread_self());
-    sleep(1 /* seconds */); // doing something
+    localPrint("异步线程： (%p)\n", pthread_self());
+    sleep(1 /* seconds */); // 等待1s
     Dart_CObject dart_object;
     dart_object.type = Dart_CObject_kInt64;
-    localPrint("value is %d", &send_port_);
     dart_object.value.as_int64 = reinterpret_cast<intptr_t>(args);
     Dart_PostCObject_DL(send_port_, &dart_object);
     // pthread_exit(args);
     return 0;
 }
-DART_EXPORT void NativeAsyncCallback(VoidCallbackFunc callback)
+DART_EXPORT void nativeAsyncCallback(VoidCallbackFunc callback)
 {
-    printf("NativeAsyncCallback Running on (%p)\n", pthread_self());
-
+    localPrint("主线程： (%p)\n", pthread_self());
     pthread_t callback_thread;
     int ret = pthread_create(&callback_thread, NULL, thread_func, (void *)callback);
     if (ret != 0)
     {
-        localPrint("pthread_create error: error_code=%d", ret);
+        localPrint("线程内部错误: error_code=%d", ret);
     }
-    localPrint("输出结束");
-    // pthread_detach(callback_thread);
 }
-DART_EXPORT void ExecuteCallback(VoidCallbackFunc callback) {
-    printf("ExecuteCallback Running on (%p)\n", pthread_self());
+DART_EXPORT void executeCallback(VoidCallbackFunc callback) {
+    localPrint("执行dart返回的函数，线程： (%p)\n", pthread_self());
     callback();
 }

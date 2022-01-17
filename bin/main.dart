@@ -37,7 +37,7 @@ void asyncCallback() {
 void _handleNativeMessage(dynamic message) {
   print('_handleNativeMessage $message');
   final int address = message;
-  nativeLibrary.ExecuteCallback(Pointer<Void>.fromAddress(address).cast());
+  nativeLibrary.executeCallback(Pointer<Void>.fromAddress(address).cast());
   _receivePort.close();
 }
 
@@ -151,13 +151,13 @@ void main() {
         nativeLibrary.InitDartApiDL(NativeApi.initializeApiDLData);
     assert(nativeInited == 0, 'DART_API_DL_MAJOR_VERSION != 2');
     _subscription = _receivePort.listen(_handleNativeMessage);
-    nativeLibrary.RegisterSendPort(_receivePort.sendPort.nativePort);
+    nativeLibrary.registerSendPort(_receivePort.sendPort.nativePort);
   }
 
   ensureNativeInitialized();
   var asyncFunc = Pointer.fromFunction<NativeAsyncCallbackFunc>(asyncCallback);
-  nativeLibrary.NativeAsyncCallback(asyncFunc);
-  nativeLibrary.NativeAsyncCallback(asyncFunc);
+  nativeLibrary.nativeAsyncCallback(asyncFunc);
+  nativeLibrary.nativeAsyncCallback(asyncFunc);
 }
 
 /*** 以下是类封装 */
