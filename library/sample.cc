@@ -127,7 +127,7 @@ DART_EXPORT void registerSendPort(Dart_Port send_port)
 }
 void *thread_func(void *args)
 {
-    localPrint("异步线程： (%p)\n", pthread_self());
+    localPrint("异步线程： (%p)", pthread_self());
     sleep(1 /* seconds */); // 等待1s
     Dart_CObject dart_object;
     dart_object.type = Dart_CObject_kInt64;
@@ -138,7 +138,7 @@ void *thread_func(void *args)
 }
 DART_EXPORT void nativeAsyncCallback(VoidCallbackFunc callback)
 {
-    localPrint("主线程： (%p)\n", pthread_self());
+    localPrint("主线程： (%p)", pthread_self());
     pthread_t callback_thread;
     int ret = pthread_create(&callback_thread, NULL, thread_func, (void *)callback);
     if (ret != 0)
@@ -147,6 +147,6 @@ DART_EXPORT void nativeAsyncCallback(VoidCallbackFunc callback)
     }
 }
 DART_EXPORT void executeCallback(VoidCallbackFunc callback) {
-    localPrint("执行dart返回的函数，线程： (%p)\n", pthread_self());
+    localPrint("执行dart返回的函数，线程： (%p)", pthread_self());
     callback();
 }

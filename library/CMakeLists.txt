@@ -18,9 +18,9 @@ target_link_libraries(test sample)
 
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")  #设置c++的编译选项
 # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_COMPILER "clang")
-set(CMAKE_CXX_COMPILER "clang++")
+# set(CMAKE_CXX_STANDARD 17)
+# set(CMAKE_C_COMPILER "clang")
+# set(CMAKE_CXX_COMPILER "clang++")
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(WIN32)

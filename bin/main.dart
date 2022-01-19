@@ -145,12 +145,11 @@ void main() {
   // ********** 异步 **********/
   // nativeLibrary.getFuture(ffi.Pointer.fromFunction(DartFunctions.futureCall));
   // WidgetsFlutterBinding.ensureInitialized();
-  StreamSubscription? _subscription;
   void ensureNativeInitialized() {
     var nativeInited =
         nativeLibrary.InitDartApiDL(NativeApi.initializeApiDLData);
     assert(nativeInited == 0, 'DART_API_DL_MAJOR_VERSION != 2');
-    _subscription = _receivePort.listen(_handleNativeMessage);
+    _receivePort.listen(_handleNativeMessage);
     nativeLibrary.registerSendPort(_receivePort.sendPort.nativePort);
   }
 
