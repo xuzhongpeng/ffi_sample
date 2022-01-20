@@ -1,3 +1,18 @@
 .dart_tool/
 .vscode/
 .packages
+
+
+
+# CMake generated files and directories
+library/build/CMakeCache.txt
+library/build/CMakeFiles/
+library/build/CmakeScripts/
+library/build/Makefile
+library/build/cmake_install.cmake
+
+# Xcode tooling generated via `cmake -G Xcode .`
+library/build/library.xcodeproj/
+
+# Xcode generated build and output directories
+library/build/library.build/

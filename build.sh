@@ -7,6 +7,11 @@ then
   cd -
   dart run ffigen
 fi
-
+if [ "$1" == "-b" ]
+then
+  cd library/build
+  make
+  cd -
+fi
 echo "开始运行Dart命令...\n"
-dart bin/main.dart
+dart run

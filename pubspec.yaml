@@ -24,8 +24,8 @@ ffigen:
     # 保证只转换sample.h文件 不转换其包含的stdint.h文件
     include-directives: 
       - 'library/sample.h'
-  structs:
-    rename:
-      'Monster': 'Monster1'
+  # structs:
+  #   rename:
+  #     'Monster': 'Monster1'
   # strings:
   #   - encoding: ascii

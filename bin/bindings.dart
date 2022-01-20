@@ -222,6 +222,87 @@ class NativeLibrary {
           'getManName');
   late final _getManName =
       _getManNamePtr.asFunction<ffi.Pointer<ffi.Int8> Function(SportMan)>();
+
+  void getFuture(
+    ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Int8>)>>
+        callback,
+  ) {
+    return _getFuture(
+      callback,
+    );
+  }
+
+  late final _getFuturePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<
+                  ffi.NativeFunction<
+                      ffi.Void Function(
+                          ffi.Pointer<ffi.Int8>)>>)>>('getFuture');
+  late final _getFuture = _getFuturePtr.asFunction<
+      void Function(
+          ffi.Pointer<
+              ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Int8>)>>)>();
+
+  /// 初始化dart_api_dl相关数据
+  int InitDartApiDL(
+    ffi.Pointer<ffi.Void> data,
+  ) {
+    return _InitDartApiDL(
+      data,
+    );
+  }
+
+  late final _InitDartApiDLPtr =
+      _lookup<ffi.NativeFunction<ffi.IntPtr Function(ffi.Pointer<ffi.Void>)>>(
+          'InitDartApiDL');
+  late final _InitDartApiDL =
+      _InitDartApiDLPtr.asFunction<int Function(ffi.Pointer<ffi.Void>)>();
+
+  /// 将dart send port传递到C/C++内存缓存起来
+  void registerSendPort(
+    int send_port,
+  ) {
+    return _registerSendPort(
+      send_port,
+    );
+  }
+
+  late final _registerSendPortPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(Dart_Port)>>(
+          'registerSendPort');
+  late final _registerSendPort =
+      _registerSendPortPtr.asFunction<void Function(int)>();
+
+  /// 执行一个异步无返回值的异步函数
+  void nativeAsyncCallback(
+    VoidCallbackFunc callback,
+  ) {
+    return _nativeAsyncCallback(
+      callback,
+    );
+  }
+
+  late final _nativeAsyncCallbackPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(VoidCallbackFunc)>>(
+          'nativeAsyncCallback');
+  late final _nativeAsyncCallback =
+      _nativeAsyncCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
+
+  /// 执行dart传递回来的地址函数
+  void executeCallback(
+    VoidCallbackFunc callback,
+  ) {
+    return _executeCallback(
+      callback,
+    );
+  }
+
+  late final _executeCallbackPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(VoidCallbackFunc)>>(
+          'executeCallback');
+  late final _executeCallback =
+      _executeCallbackPtr.asFunction<void Function(VoidCallbackFunc)>();
 }
 
 /// 结构体
@@ -243,3 +324,9 @@ class ContactType extends ffi.Union {
 }
 
 typedef SportMan = ffi.Pointer<ffi.Void>;
+
+/// A port is used to send or receive inter-isolate messages
+typedef Dart_Port = ffi.Int64;
+
+/// C调用Dart异步函数
+typedef VoidCallbackFunc = ffi.Pointer<ffi.NativeFunction<ffi.Void Function()>>;

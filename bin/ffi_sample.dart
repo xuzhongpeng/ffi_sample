@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:ffi' as ffi;
+import 'dart:ffi';
+import 'dart:isolate';
 import 'package:ffi/ffi.dart';
 import 'dart:io' show Platform, Directory;
 
@@ -21,12 +24,29 @@ class DartFunctions {
     debugPrint("num1: ${num1}, num2: ${num2}");
     return num1 + num2;
   }
+
+  static void futureCall(ffi.Pointer<ffi.Int8> value) {
+    print("异步返回了" + value.cast<Utf8>().toDartString());
+  }
 }
 
+void asyncCallback() {
+  print('asyncCallback called');
+}
+
+void _handleNativeMessage(dynamic message) {
+  print('_handleNativeMessage $message');
+  final int address = message;
+  nativeLibrary.executeCallback(Pointer<Void>.fromAddress(address).cast());
+  _receivePort.close();
+}
+
+ReceivePort _receivePort = ReceivePort();
+
+typedef NativeAsyncCallbackFunc = Void Function();
+final NativeLibrary nativeLibrary = initLibrary();
 void main() {
   // 初始化互调框架
-
-  final NativeLibrary nativeLibrary = initLibrary();
 
   // *************** 基础数据类型 **************
   debugPrint('\n*************** 1. 基础数据类型 **************\n');
@@ -121,6 +141,22 @@ void main() {
   SportManType m = SportManType(nativeLibrary);
   m.setName('SY is a dog');
   debugPrint(m.getName());
+
+  // ********** 异步 **********/
+  // nativeLibrary.getFuture(ffi.Pointer.fromFunction(DartFunctions.futureCall));
+  // WidgetsFlutterBinding.ensureInitialized();
+  void ensureNativeInitialized() {
+    var nativeInited =
+        nativeLibrary.InitDartApiDL(NativeApi.initializeApiDLData);
+    assert(nativeInited == 0, 'DART_API_DL_MAJOR_VERSION != 2');
+    _receivePort.listen(_handleNativeMessage);
+    nativeLibrary.registerSendPort(_receivePort.sendPort.nativePort);
+  }
+
+  ensureNativeInitialized();
+  var asyncFunc = Pointer.fromFunction<NativeAsyncCallbackFunc>(asyncCallback);
+  nativeLibrary.nativeAsyncCallback(asyncFunc);
+  nativeLibrary.nativeAsyncCallback(asyncFunc);
 }
 
 /*** 以下是类封装 */
@@ -143,6 +179,12 @@ class SportManType {
     _lib.setManName(man, name.toNativeUtf8().cast());
   }
 }
+
+/**** 类封装 end ***/
+/*** 以下是异步封装 */
+// C++调用成功后回调
+
+/*** 异步封装end */
 
 /*** 以下是工具方法 */
 /// 初始化library

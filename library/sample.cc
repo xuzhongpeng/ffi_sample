@@ -3,10 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 #include <stdio.h>
+#include <functional>
 #include <stdarg.h>
 #include <stdlib.h>
 #include "sample.h"
-
+#include <pthread.h>
+#include <unistd.h>
+// #include <dart_api_dl.h>
 void localPrint(const char *str, ...);
 // 输出日志信息函数
 void localPrint(const char *str, ...)
@@ -18,15 +21,9 @@ void localPrint(const char *str, ...)
     va_end(args);        //结束可变参数的获取
     printf("\n");
 }
-int main()
+void back(const char *str)
 {
-    hello_world();
-    // 测试类的输入输出
-    SportMan man = createSportMan();
-    setManName(man,"让我起飞");
-    localPrint(getManName(man));
-    
-    return 0;
+    localPrint(str);
 }
 
 /*** 开始测试 ***/
@@ -78,12 +75,78 @@ SportMan createSportMan()
 {
     return new SportManType();
 }
-void setManName(SportMan self,const char *name)
+void setManName(SportMan self, const char *name)
 {
-    SportManType* p = reinterpret_cast<SportManType*>(self);
+    SportManType *p = reinterpret_cast<SportManType *>(self);
     p->setName(name);
 }
-const char* getManName(SportMan self) {
-    SportManType* p = reinterpret_cast<SportManType*>(self);
+const char *getManName(SportMan self)
+{
+    SportManType *p = reinterpret_cast<SportManType *>(self);
     return p->getName();
+}
+
+struct thread_data
+{
+    FUNC *callback;
+};
+void *say_hello(void *args)
+{
+    void (*callback1)(const char *) = (void (*)(const char *))args;
+    localPrint("Hello Runoob！");
+    // callback1("哈哈哈1");
+    // pthread_exit(NULL);
+    return 0;
+}
+// 异步测试
+void getFuture(void (*callback1)(const char *))
+{
+
+    pthread_t tids;
+    // callback1("嘻嘻");
+    int ret = pthread_create(&tids, NULL, say_hello, (void *)callback1);
+    if (ret != 0)
+    {
+        localPrint("pthread_create error: error_code=%d", ret);
+    }
+    localPrint("输出结束");
+    pthread_exit(NULL);
+}
+
+// Initialize `dart_api_dl.h`
+DART_EXPORT intptr_t InitDartApiDL(void *data)
+{
+    localPrint("初始化InitDartApiDL");
+    return Dart_InitializeApiDL(data);
+}
+Dart_Port send_port_;
+DART_EXPORT void registerSendPort(Dart_Port send_port)
+{
+    localPrint("设置send port");
+    send_port_ = send_port;
+}
+void *thread_func(void *args)
+{
+    localPrint("异步线程： (%p)", pthread_self());
+    sleep(1 /* seconds */); // 等待1s
+    Dart_CObject dart_object;
+    dart_object.type = Dart_CObject_kInt64;
+    dart_object.value.as_int64 = reinterpret_cast<intptr_t>(args);
+    Dart_PostCObject_DL(send_port_, &dart_object);
+    // pthread_exit(args);
+    return 0;
+}
+DART_EXPORT void nativeAsyncCallback(VoidCallbackFunc callback)
+{
+    localPrint("主线程： (%p)", pthread_self());
+    pthread_t callback_thread;
+    int ret = pthread_create(&callback_thread, NULL, thread_func, (void *)callback);
+    if (ret != 0)
+    {
+        localPrint("线程内部错误: error_code=%d", ret);
+    }
+}
+DART_EXPORT void executeCallback(VoidCallbackFunc callback) {
+    localPrint("执行dart返回的函数，线程： (%p)", pthread_self());
+    callback();
 }

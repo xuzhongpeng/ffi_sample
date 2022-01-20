@@ -4,9 +4,15 @@
 #include <stdint.h>
 // 因为本测试设计到了C++的类(用的C++编译的)，所以需要把函数都通过extern "C"导出让ffi识别
 #ifdef __cplusplus
-  #define EXPORT extern "C" __declspec(dllexport)
+#define EXPORT extern "C"
+//__declspec(dllexport)
+extern "C"
+{
+#include "include/dart_api_dl.h"
+}
 #else
-  #define EXPORT // ffigen生成时，会使用C编译器，所以改成空即可
+#define EXPORT // ffigen生成时，会使用C编译器，所以改成空即可
+#include "include/dart_api_dl.h"
 #endif
 // 基础数据类型
 EXPORT int8_t int8 = -108;
@@ -67,8 +73,23 @@ public:
   }
 };
 #endif
-EXPORT typedef void* SportMan;
+EXPORT typedef void *SportMan;
 
-EXPORT SportMan createSportMan(); // 初始化SportManType类
-EXPORT void setManName(SportMan self,const char *name); // 设置姓名
-EXPORT const char *getManName(SportMan self); // 获取姓名
+EXPORT SportMan createSportMan();                        // 初始化SportManType类
+EXPORT void setManName(SportMan self, const char *name); // 设置姓名
+EXPORT const char *getManName(SportMan self);            // 获取姓名
+
+/**  C调用Dart函数(错误） **/
+typedef void(FUNC)(const char *);
+EXPORT void getFuture(void (*callback)(const char *));
+
+/**  C调用Dart异步函数 **/
+typedef void (*VoidCallbackFunc)();
+/** 初始化dart_api_dl相关数据 */
+DART_EXPORT intptr_t InitDartApiDL(void *data);
+/** 将dart send port传递到C/C++内存缓存起来 */
+DART_EXPORT void registerSendPort(Dart_Port send_port);
+/** 执行一个异步无返回值的异步函数 **/
+DART_EXPORT void nativeAsyncCallback(VoidCallbackFunc callback);
+/** 执行dart传递回来的地址函数 */
+DART_EXPORT void executeCallback(VoidCallbackFunc callback);
