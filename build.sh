@@ -14,4 +14,4 @@ then
   cd -
 fi
 echo "开始运行Dart命令...\n"
-dart bin/main.dart
+dart run
