@@ -8,13 +8,6 @@ import 'dart:io' show Platform, Directory;
 import 'package:path/path.dart' as path;
 import 'bindings.dart';
 
-// c调用dart方法
-// typedef Callback = ffi.Void Function(ffi.Int32, ffi.Int32);
-// typedef Native_calc = ffi.Void Function(
-//     ffi.Int32, ffi.Pointer<ffi.NativeFunction<Callback>>);
-// typedef FFI_calc = void Function(
-//     int, ffi.Pointer<ffi.NativeFunction<Callback>>);
-
 class DartFunctions {
   static void dartFunction() {
     debugPrint("Dart 方法被调用了");
@@ -143,8 +136,6 @@ void main() {
   debugPrint(m.getName());
 
   // ********** 异步 **********/
-  // nativeLibrary.getFuture(ffi.Pointer.fromFunction(DartFunctions.futureCall));
-  // WidgetsFlutterBinding.ensureInitialized();
   void ensureNativeInitialized() {
     var nativeInited =
         nativeLibrary.InitDartApiDL(NativeApi.initializeApiDLData);
@@ -155,7 +146,6 @@ void main() {
 
   ensureNativeInitialized();
   var asyncFunc = Pointer.fromFunction<NativeAsyncCallbackFunc>(asyncCallback);
-  nativeLibrary.nativeAsyncCallback(asyncFunc);
   nativeLibrary.nativeAsyncCallback(asyncFunc);
 }
 
@@ -179,12 +169,6 @@ class SportManType {
     _lib.setManName(man, name.toNativeUtf8().cast());
   }
 }
-
-/**** 类封装 end ***/
-/*** 以下是异步封装 */
-// C++调用成功后回调
-
-/*** 异步封装end */
 
 /*** 以下是工具方法 */
 /// 初始化library
